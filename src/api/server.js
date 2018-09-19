@@ -52,12 +52,6 @@ app.use(function(req, res, next) {
 	next();
 });
 
-// app.get('/', function(req, res) {
-//   res.sendFile(path.resolve(__dirname + '/../src/index.html'))
-// });
-
-// app.use(express.static(path.resolve(__dirname + '/../src/')))
-
 ///////////////////////
 // Import/Use Routes //
 ///////////////////////
