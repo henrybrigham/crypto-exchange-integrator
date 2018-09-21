@@ -1,15 +1,15 @@
 //////////////////
 // Dependencies //
 //////////////////
-let fs = require('fs');
-let path = require('path');
-let express = require("express");
-let helmet     = require('helmet');
-let bodyParser = require("body-parser");
-let app        = module.exports = express();
-let session    = require('client-sessions');
-let http       = require('http').Server(app);
-let expressSession = require("express-session");
+const fs = require('fs');
+const path = require('path');
+const express = require("express");
+const helmet     = require('helmet');
+const bodyParser = require("body-parser");
+const app        = module.exports = express();
+const session    = require('client-sessions');
+const http       = require('http').Server(app);
+const expressSession = require("express-session");
 
 ////////////////
 // Misc Setup //
@@ -56,13 +56,7 @@ app.use(function(req, res, next) {
 // Import/Use Routes //
 ///////////////////////
 let orders     = require('./routes/orders');
-let bittrex     = require('./routes/bittrex');
-let poloniex     = require('./routes/poloniex');
-
-app.use('/bittrex', bittrex);
 app.use('/orders', orders);
-app.use('/poloniex', poloniex);
-
 require('./routes/errorRoutes');
 
 try {
