@@ -17,6 +17,7 @@ const expressSession = require("express-session");
 ////////////
 const server = http.createServer();
 const io = socket_io();
+
 server.listen(8000, () => {
   console.log('listening, 8000');
 });
@@ -69,23 +70,46 @@ app.use(function(req, res, next) {
 io.attach(server);
 io.on('connection', function(socket){
   socket.on('action', (action) => {
-		const poloniexUrl =
-		'https://poloniex.com/public?command=returnOrderBook&currencyPair=BTC_ETH&depth=10';
-
 		const bittrexUrl = 'https://bittrex.com/api/v1.1/public/getorderbook?market=BTC-ETH&type=both';
 		const errors = [];
 		const orders = {
 			poloniexOrders: {},
 			bittrexOrders: {}
 		}
-		const getPoloniexBook = async url => {
+		
+		function getPoloniexBook() {
 			try {
-				const response = await axios.get(url);
-				orders.poloniexOrders = response.data;
-				console.log('success');
+				const subscribePayload = {
+					"command": "subscribe",
+					"channel": "BTC_ETH"
+				}
+				console.log('attempt');
+
+				const poloniexSocket = socket_io('wss://api2.poloniex.com');
+				
+				// require('socket.io-client')('wss://api2.poloniex.com');
+				poloniexSocket.connect(); 
+
+				poloniexSocket.on('connect', function(subscribePayload){
+					console.log('Client has connected to the server!');
+
+					try{
+						console.log('socket connect');
+						// socket.emit('configure', {email:myemail, deviceid:device_id});
+					}catch(e){ console.log(e); }
+				 });
+				// poloniexSocket.on('connection', function(subscribePayload){ 
+				// 	console.log('** its working');
+				// });
+				// var poloniexSocket = io.connect(poloniexUrl);
+    		// poloniexSocket.on('message', function(message) {
+				// 	orders.poloniexOrders = message;
+				// })
+				// const response = await axios.get(url, subscribePayload);
+				// orders.poloniexOrders = response.data;
 			
 			} catch (error) {
-				console.log('error', error);
+				console.log('*1error', error);
 				errors.push(error);
 			}
 		};
@@ -95,15 +119,14 @@ io.on('connection', function(socket){
 				const response = await axios.get(url);
 				orders.bittrexOrders = response.data;
 			} catch (error) {
-				console.log('error', error);
+				console.log('*2error', error);
 				errors.push(error);
 			}
 		};
 
-		console.log('SOCKETTTT', action);
     if (action.type === 'orders/GET_BOOK_ORDERS_REQUEST') {
 			Promise.all([
-				getPoloniexBook(poloniexUrl),
+				getPoloniexBook(),
 				getBittrexBook(bittrexUrl)
 			]).then(() => {
 				if (errors.length > 0) {
