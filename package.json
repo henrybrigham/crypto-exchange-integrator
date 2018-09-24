@@ -40,7 +40,8 @@
     "socket.io-client": "2.0.3",
     "webpack": "3.8.1",
     "webpack-dev-server": "2.4.2",
-    "webpack-merge": "4.1.1"
+    "webpack-merge": "4.1.1",
+    "websocket": "1.0.28"
   },
   "devDependencies": {
     "babel-eslint": "8.2.2",
