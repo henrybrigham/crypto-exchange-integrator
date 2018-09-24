@@ -17,20 +17,10 @@ const expressSession = require("express-session");
 ////////////
 const server = http.createServer();
 const io = socket_io();
-var WebSocketClient = require('websocket').client;
-
-const subscribePayload = {
-	"command": "subscribe",
-	"channel": "BTC_ETH"
-}
-
-var poloniexSocket = new WebSocketClient([subscribePayload]);
+const WebSocketClient = require('websocket').client;
 
 server.listen(8000, () => {
 	console.log('listening, 8000');
-
-poloniexSocket.connect('wss://api2.poloniex.com', 'echo-protocol');
-console.log('done');
 });
 
 ////////////////
@@ -61,6 +51,42 @@ const bookOrders = {
 	bittrexOrders: {}
 }
 		
+app.use(helmet());
+
+
+// app.use(cors({
+// 	origin: true,
+// 	credentials: true
+// }));
+
+// app.use(expressSession({
+// 	secret: "lsjkhflsdkjfhsdlkjfh",
+// 	resave: false,
+// 	saveUninitialized: false
+// }));
+
+app.use(function(req, res, next) {
+	console.log(req.url);
+	next();
+});
+
+////////////
+// Socket //
+////////////
+io.attach(server);
+io.on('connection', function(socket){
+  socket.on('action', (action) => {
+		const bittrexUrl = 'https://bittrex.com/api/v1.1/public/getorderbook?market=BTC-ETH&type=both';
+
+		const getBittrexBook = async url => {
+			try {
+				const response = await axios.get(url);
+				bookOrders.bittrexOrders = response.data;
+			} catch (error) {
+				console.log('*2error', error);
+				errors.push(error);
+			}
+		};
 		function getPoloniexBook() {
 			try {
 				console.log('attempt');
@@ -69,6 +95,14 @@ const bookOrders = {
 				
 				// require('socket.io-client')('wss://api2.poloniex.com');
 				// poloniexSocket.connect(); 
+				const subscribePayload = {
+					"command": "subscribe",
+					"channel": "BTC_ETH"
+				}
+
+				var poloniexSocket = new WebSocketClient([subscribePayload]);
+
+				poloniexSocket.connect('wss://api2.poloniex.com', 'echo-protocol');
 
 				poloniexSocket.on('connect', function(connection) {
 					console.log('WebSocket Client Connected');
@@ -116,47 +150,10 @@ const bookOrders = {
 				errors.push(error);
 			}
 		};
-		
-app.use(helmet());
-
-
-// app.use(cors({
-// 	origin: true,
-// 	credentials: true
-// }));
-
-// app.use(expressSession({
-// 	secret: "lsjkhflsdkjfhsdlkjfh",
-// 	resave: false,
-// 	saveUninitialized: false
-// }));
-
-app.use(function(req, res, next) {
-	console.log(req.url);
-	next();
-});
-
-////////////
-// Socket //
-////////////
-io.attach(server);
-io.on('connection', function(socket){
-  socket.on('action', (action) => {
-		const bittrexUrl = 'https://bittrex.com/api/v1.1/public/getorderbook?market=BTC-ETH&type=both';
-
-		const getBittrexBook = async url => {
-			try {
-				const response = await axios.get(url);
-				bookOrders.bittrexOrders = response.data;
-			} catch (error) {
-				console.log('*2error', error);
-				errors.push(error);
-			}
-		};
 
     if (action.type === 'orders/GET_BOOK_ORDERS_REQUEST') {
 			Promise.all([
-				getPoloniexBook(),
+				// getPoloniexBook(),
 				getBittrexBook(bittrexUrl)
 			]).then(() => {
 				if (errors.length > 0) {
