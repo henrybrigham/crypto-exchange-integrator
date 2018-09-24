@@ -17,9 +17,10 @@ const expressSession = require("express-session");
 ////////////
 const server = http.createServer();
 const io = socket_io();
+const WebSocketClient = require('websocket').client;
 
 server.listen(8000, () => {
-  console.log('listening, 8000');
+	console.log('listening, 8000');
 });
 
 ////////////////
@@ -44,7 +45,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-
+const errors = [];
+const bookOrders = {
+	poloniexOrders: {},
+	bittrexOrders: {}
+}
+		
 app.use(helmet());
 
 
@@ -71,33 +77,64 @@ io.attach(server);
 io.on('connection', function(socket){
   socket.on('action', (action) => {
 		const bittrexUrl = 'https://bittrex.com/api/v1.1/public/getorderbook?market=BTC-ETH&type=both';
-		const errors = [];
-		const orders = {
-			poloniexOrders: {},
-			bittrexOrders: {}
-		}
-		
+
+		const getBittrexBook = async url => {
+			try {
+				const response = await axios.get(url);
+				bookOrders.bittrexOrders = response.data;
+			} catch (error) {
+				console.log('*2error', error);
+				errors.push(error);
+			}
+		};
 		function getPoloniexBook() {
 			try {
+				console.log('attempt');
+
+				// const poloniexSocket = socket_io('wss://api2.poloniex.com');
+				
+				// require('socket.io-client')('wss://api2.poloniex.com');
+				// poloniexSocket.connect(); 
 				const subscribePayload = {
 					"command": "subscribe",
 					"channel": "BTC_ETH"
 				}
-				console.log('attempt');
 
-				const poloniexSocket = socket_io('wss://api2.poloniex.com');
-				
-				// require('socket.io-client')('wss://api2.poloniex.com');
-				poloniexSocket.connect(); 
+				var poloniexSocket = new WebSocketClient([subscribePayload]);
 
-				poloniexSocket.on('connect', function(subscribePayload){
-					console.log('Client has connected to the server!');
+				poloniexSocket.connect('wss://api2.poloniex.com', 'echo-protocol');
 
-					try{
-						console.log('socket connect');
-						// socket.emit('configure', {email:myemail, deviceid:device_id});
-					}catch(e){ console.log(e); }
-				 });
+				poloniexSocket.on('connect', function(connection) {
+					console.log('WebSocket Client Connected');
+					connection.on('error', function(error) {
+							console.log("Connection Error: " + error.toString());
+					});
+					connection.on('close', function() {
+							console.log('echo-protocol Connection Closed');
+					});
+					connection.on('message', function(message) {
+							if (message.type === 'utf8') {
+									console.log("Received: '" + message.utf8Data + "'");
+							}
+					});
+					
+					function sendNumber() {
+							if (connection.connected) {
+									var number = Math.round(Math.random() * 0xFFFFFF);
+									connection.sendUTF(number.toString());
+									setTimeout(sendNumber, 1000);
+							}
+					}
+					sendNumber();
+			});
+				// poloniexSocket.on('connect', function(subscribePayload){
+				// 	console.log('Client has connected to the server!');
+
+				// 	try{
+				// 		console.log('socket connect');
+				// 		// socket.emit('configure', {email:myemail, deviceid:device_id});
+				// 	}catch(e){ console.log(e); }
+				//  });
 				// poloniexSocket.on('connection', function(subscribePayload){ 
 				// 	console.log('** its working');
 				// });
@@ -114,25 +151,15 @@ io.on('connection', function(socket){
 			}
 		};
 
-		const getBittrexBook = async url => {
-			try {
-				const response = await axios.get(url);
-				orders.bittrexOrders = response.data;
-			} catch (error) {
-				console.log('*2error', error);
-				errors.push(error);
-			}
-		};
-
     if (action.type === 'orders/GET_BOOK_ORDERS_REQUEST') {
 			Promise.all([
-				getPoloniexBook(),
+				// getPoloniexBook(),
 				getBittrexBook(bittrexUrl)
 			]).then(() => {
 				if (errors.length > 0) {
 					socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_FAILURE', payload: errors });
 				} else {
-					socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_SUCCESS', payload: orders });
+					socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_SUCCESS', payload: bookOrders });
 				}	});
 				}
 	});
