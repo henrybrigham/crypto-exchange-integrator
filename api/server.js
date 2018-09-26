@@ -72,7 +72,8 @@ poloniex.on('message', (channelName, data, seq) => {
   if (channelName === 'BTC_ETH') {
 		if (data[0].type === 'orderBook') {
 			bookOrders.poloniexOrders = data[0].data
-		} else if (data[0].type === 'orderBookRemove') {
+		} 
+		else if (data[0].type === 'orderBookRemove') {
 			const rate = data[0].data.type.rate;
 			if (data[0].data.type === 'bid') {
 				delete bookOrders.poloniexOrders.bids[rate];
@@ -96,6 +97,7 @@ poloniex.on('close', (reason, details) => {
 });
  
 poloniex.on('error', (error) => {
+	console.log('error', error);
 	errors.poloniexError = error;
 });
  
