@@ -92,7 +92,7 @@ poloniex.on('message', (channelName, data, seq) => {
 });
  
 poloniex.on('close', (reason, details) => {
-  console.log(`Poloniex WebSocket connection disconnected`);
+  console.log(`Poloniex WebSocket connection disconnected`, reason);
 });
  
 poloniex.on('error', (error) => {
