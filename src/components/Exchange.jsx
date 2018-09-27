@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import BookOrder from './BookOrder';
+const BookOrderHelpers = require('../helpers/bookOrderHelpers');
 
 const propTypes = {
 	bookOrders: PropTypes.object.isRequired,
@@ -8,20 +9,38 @@ const propTypes = {
 
 class Exchange extends React.Component {
   render() {
-		console.log(this.props.bookOrders);
-		// console.log('values', Object.values(this.props.bookOrders));
+		const { bittrexOrders, poloniexOrders} = this.props.bookOrders;
 
-		// let mappedBittrexBids;
-		// if (this.props.bookOrders.bittrexOrders.bids !== undefined) {
-		// 	mappedBittrexBids = this.props.bookOrders.bittrexOrders.Buys.map((order, i) => {
-		// 		return <BookOrder bookOrder={order}/>
-		// 	})
-		// }
+		let mappedBids;
+		let mappedAsks;
+
+		if (bittrexOrders !== undefined && poloniexOrders !== undefined) {
+			const totalBids = bittrexOrders.bids.concat(poloniexOrders.bids);
+			const totalAsks = bittrexOrders.asks.concat(poloniexOrders.asks);
+			const sortedBids = BookOrderHelpers.sortBookOrders(totalBids);
+			const sortedAsks = BookOrderHelpers.sortBookOrders(totalAsks);
+
+			mappedBids = sortedBids.map((order, i) => {
+				return <BookOrder bookOrder={order} key={i}/>
+			});
+
+			mappedAsks = sortedAsks.map((order, i) => {
+				return <BookOrder bookOrder={order} key={i}/>
+			})
+		}
 		
   	return (
 			<div className="page">
 				<h2 className="pageHeader">Exchange</h2>
-				<div className="exchangeContainer">
+				<div className="row even">
+					<div className="exchangeContainer column">
+						<h1>Bids Book</h1>
+						{mappedBids}
+					</div>
+					<div className="exchangeContainer column">
+					<h1>Asks Book</h1>
+						{mappedAsks}
+					</div>
 				</div>
   		</div>
   	);

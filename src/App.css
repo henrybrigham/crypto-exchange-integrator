@@ -29,7 +29,7 @@
 }
 
 .exchangeContainer {
-	width: 80%;
+	width: 40%;
 	border: 2px solid silver;
 }
 
@@ -41,6 +41,20 @@
 .rate {
 	color: green;
 	margin-right: 10px;
+}
+
+.row {
+	display: flex;
+	flex-direction: row;
+}
+
+.column {
+	display: flex;
+	flex-direction: column;
+}
+
+.even {
+	justify-content: space-evenly;
 }
 
 @keyframes App-logo-spin {

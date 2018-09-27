@@ -90,7 +90,7 @@ io.on('connection', function(socket){
 				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_SUCCESS', payload: bookOrders });
 				setTimeout(getPoloniexBook, 5000, url);
 			} catch (error) {
-				console.log('error', error);
+				console.log('poloniex error', error);
 				errors.poloniexError = error;
 				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_FAILURE', payload: errors });
 			}
@@ -114,15 +114,7 @@ io.on('connection', function(socket){
 ///////////////////////
 // Import/Use Routes //
 ///////////////////////
-let orders     = require('./routes/orders');
-app.use('/orders', orders);
-require('./routes/errorRoutes');
-
 app.use(function(req, res, next) {
 	res.status(404);
 	res.send("no");
 });
-
-// app.listen(8000, function() {
-// 	console.log("Server started on Port: 8000");
-// });

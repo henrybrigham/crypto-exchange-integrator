@@ -7,17 +7,25 @@ const propTypes = {
 
 class BookOrder extends React.Component {
   render() {
-		const {bookOrder} = this.props;
-		console.log('order', bookOrder);
-  	return (
-			<div className="bookOrder">
+		const { bookOrder } = this.props;
+
+		return (
+			<div className="bookOrder row">
+				<div>
+					<span className="label">Exchange</span>
+					<span className="rate">{bookOrder.Exchange}</span>
+				</div>
 				<div>
 					<span className="label">Rate</span>
 					<span className="rate">{bookOrder.Rate}</span>
 				</div>
 				<div>
-					<span className="label">quantity</span>
+					<span className="label">Quantity</span>
 					<span className="rate">{bookOrder.Quantity}</span>
+				</div>
+				<div>
+					<span className="label">Type</span>
+					<span className="rate">{bookOrder.Type}</span>
 				</div>
 			</div>
   	);

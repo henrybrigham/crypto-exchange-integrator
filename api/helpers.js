@@ -23,11 +23,12 @@ class Helpers {
 			bids: [],
 			asks: []
 		};
+
 		orders.bids.forEach(order => {
 			const formattedOrder = {
 				Exchange: 'poloniex',
 				Quantity: order[1],
-				Rate: order[0],
+				Rate: parseFloat(order[0]),
 				Type: 'bid'
 			} 
 			formattedOrders.bids.push(formattedOrder);
@@ -36,7 +37,7 @@ class Helpers {
 			const formattedOrder = {
 				Exchange: 'poloniex',
 				Quantity: order[1],
-				Rate: order[0],
+				Rate: parseFloat(order[0]),
 				Type: 'ask'
 			} 
 			formattedOrders.asks.push(formattedOrder);
