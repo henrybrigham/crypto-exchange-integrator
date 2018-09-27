@@ -6,6 +6,7 @@ const path = require('path');
 const express = require("express");
 const helmet     = require('helmet');
 const bodyParser = require("body-parser");
+const cors       = require('cors');
 const app        = module.exports = express();
 const session    = require('client-sessions');
 const http       = require('http');
@@ -65,62 +66,46 @@ app.use(function(req, res, next) {
 ////////////
 // Sockets //
 ////////////
-const poloniex = new Poloniex(); 
-poloniex.openWebSocket();
-poloniex.subscribe('BTC_ETH');
-poloniex.on('message', (channelName, data, seq) => {
-  if (channelName === 'BTC_ETH') {
-		if (data[0].type === 'orderBook') {
-			bookOrders.poloniexOrders = data[0].data
-		} else if (data[0].type === 'orderBookRemove') {
-			const rate = data[0].data.type.rate;
-			if (data[0].data.type === 'bid') {
-				delete bookOrders.poloniexOrders.bids[rate];
-			} else {
-				delete bookOrders.poloniexOrders.asks[rate];
-			}
-		} else if (data[0].type === 'orderBookModify') {
-			const type = data[0].data.type;
-			const amount = data[0].data.amount;
-			if (type === 'bid') {
-				bookOrders.poloniexOrders.bids.rate = amount;
-			} else {
-				bookOrders.poloniexOrders.asks.rate = amount;
-			}
-		}
-  }
-});
- 
-poloniex.on('close', (reason, details) => {
-  console.log(`Poloniex WebSocket connection disconnected`);
-});
- 
-poloniex.on('error', (error) => {
-	errors.poloniexError = error;
-});
- 
-poloniex.openWebSocket({ version: 2 });
-
 io.attach(server);
 io.on('connection', function(socket){
   socket.on('action', (action) => {
-		bittrex.websockets.client(function() {
-			bittrex.websockets.subscribe(['BTC-ETH'], function(data, err) {
-				if (data.M === 'updateExchangeState') {
-					bookOrders.bittrexOrders = data.A;
-					if (Object.keys(errors.poloniexError).length > 0 || Object.keys(errors.bittrexError).length > 0) {
-						socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_FAILURE', payload: errors });
-					} else {
-						socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_SUCCESS', payload: bookOrders });
-					}	
-				}
-				else if (err) {
-					errors.bittrexErrors = err.
-					socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_FAILURE', payload: errors });
-				}
-			});
-		});
+		const getBittrexBook = async url => {
+			console.log('bittRex called');
+			try {
+				const response = await axios.get(url);
+				bookOrders.bittrexOrders = response.data.result;
+				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_SUCCESS', payload: bookOrders });
+				setTimeout(getBittrexBook, 5000, url);
+			} catch (error) {
+				console.log('*bittrex error', error);
+				errors.bittrexError = error;
+				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_FAILURE', payload: errors });			}
+		};
+
+		const getPoloniexBook = async url => {
+			console.log('Poloniex called');
+			try {
+				const response = await axios.get(url);
+				bookOrders.poloniexOrders = response.data;
+				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_SUCCESS', payload: bookOrders });
+				setTimeout(getPoloniexBook, 5000, url);
+
+				// console.log('success', response.data);
+			
+			} catch (error) {
+				console.log('error', error);
+				errors.poloniexError = error;
+				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_FAILURE', payload: errors });
+			}
+		};
+
     if (action.type === 'orders/GET_BOOK_ORDERS_REQUEST') {
+			console.log('**actionRequest');
+			const poloniexUrl =
+		'https://poloniex.com/public?command=returnOrderBook&currencyPair=BTC_ETH&depth=100';
+		const bittrexUrl = 'https://bittrex.com/api/v1.1/public/getorderbook?market=BTC-ETH&type=both';
+			getPoloniexBook(poloniexUrl);
+			getBittrexBook(bittrexUrl);
 			if (errors.length > 0) {
 				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_FAILURE', payload: errors });
 			} else {

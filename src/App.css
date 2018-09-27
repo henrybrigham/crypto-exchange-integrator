@@ -22,6 +22,27 @@
   font-size: large;
 }
 
+.bookOrder {
+	height: 40px;
+	width: 100%;
+	border-bottom: 1px solid silver;
+}
+
+.exchangeContainer {
+	width: 80%;
+	border: 2px solid silver;
+}
+
+.label {
+	color: silver;
+	margin-right: 10px;
+}
+
+.rate {
+	color: green;
+	margin-right: 10px;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

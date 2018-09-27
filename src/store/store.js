@@ -9,7 +9,7 @@ import rootSaga from './rootSaga';
 	const sagaMiddleware = createSagaMiddleware();
 	const socket = io('http://localhost:8000');
 	const socketIoMiddleware = createSocketIoMiddleware(socket, 'orders/');	
-	const middleware = [sagaMiddleware, logger(), socketIoMiddleware];
+	const middleware = [sagaMiddleware, socketIoMiddleware];
 	const middlewareEnhancer = applyMiddleware(...middleware);
 	const storeEnhancers = [middlewareEnhancer];
 	const composedEnhancer = compose(...storeEnhancers);
