@@ -13,8 +13,8 @@ const http       = require('http');
 const socket_io  = require('socket.io');
 const axios 	   = require("axios");
 const expressSession = require("express-session");
-var bittrex = require('node-bittrex-api');
-const Poloniex = require('poloniex-api-node');
+const Helpers = require('./helpers');
+
 
 ////////////
 // Server //
@@ -70,10 +70,10 @@ io.attach(server);
 io.on('connection', function(socket){
   socket.on('action', (action) => {
 		const getBittrexBook = async url => {
-			console.log('bittRex called');
 			try {
 				const response = await axios.get(url);
-				bookOrders.bittrexOrders = response.data.result;
+				const formattedBittrexBookOrders = Helpers.formatBittrexOrders(response.data.result);
+				bookOrders.bittrexOrders = formattedBittrexBookOrders;
 				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_SUCCESS', payload: bookOrders });
 				setTimeout(getBittrexBook, 5000, url);
 			} catch (error) {
@@ -83,15 +83,12 @@ io.on('connection', function(socket){
 		};
 
 		const getPoloniexBook = async url => {
-			console.log('Poloniex called');
 			try {
 				const response = await axios.get(url);
-				bookOrders.poloniexOrders = response.data;
+				const formattedPoloniexBookOrders = Helpers.formatPoloniexOrders(response.data);
+				bookOrders.poloniexOrders = formattedPoloniexBookOrders;
 				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_SUCCESS', payload: bookOrders });
 				setTimeout(getPoloniexBook, 5000, url);
-
-				// console.log('success', response.data);
-			
 			} catch (error) {
 				console.log('error', error);
 				errors.poloniexError = error;
@@ -100,7 +97,6 @@ io.on('connection', function(socket){
 		};
 
     if (action.type === 'orders/GET_BOOK_ORDERS_REQUEST') {
-			console.log('**actionRequest');
 			const poloniexUrl =
 		'https://poloniex.com/public?command=returnOrderBook&currencyPair=BTC_ETH&depth=100';
 		const bittrexUrl = 'https://bittrex.com/api/v1.1/public/getorderbook?market=BTC-ETH&type=both';
