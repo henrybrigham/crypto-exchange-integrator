@@ -1,14 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Loader from '../assets/loading.gif';
 import BookOrder from './BookOrder';
 import ExchangeHeader from './ExchangeHeader';
+import MarketSelector from './MarketSelector'
 const BookOrderHelpers = require('../helpers/bookOrderHelpers');
 
 const propTypes = {
 	bookOrders: PropTypes.object.isRequired,
+	fetchBookOrders: PropTypes.func.isRequired
 };
 
 class Exchange extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			selectedMarket: {
+				value: 'ETH/BTC',
+				label: 'ETH/BTC'
+			}
+		}
+	}
+
+	componentDidMount() {
+		this.props.fetchBookOrders(this.state.selectedMarket.value);
+	}
 
 	calculateVolume = (orders) => {
 		let coinSum = 0;
@@ -16,6 +32,11 @@ class Exchange extends React.Component {
 			coinSum += order.Quantity;
 		})
 		return coinSum;
+	}
+
+	onSelect = (selectedMarket) => {
+		this.setState({selectedMarket});
+		this.props.fetchBookOrders(selectedMarket.value);
 	}
 
 	renderOrders = () => {
@@ -55,13 +76,15 @@ class Exchange extends React.Component {
 			);
 		}
 		else {
-			return '';
+			return <img src={Loader} />;
 		}
 	}
 
   render() {
   	return (
 			<div className="page">
+				<MarketSelector selectedMarket={this.state.selectedMarket}
+				onSelect={this.onSelect} />
 				<h2 className="pageHeader">Exchange</h2>
 				{this.renderOrders()}
   		</div>

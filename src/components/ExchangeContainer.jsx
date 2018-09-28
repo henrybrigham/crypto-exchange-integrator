@@ -11,10 +11,6 @@ const propTypes = {
 };
 
 class ExchangeContainer extends React.Component {
-	componentDidMount() {
-		this.props.fetchBookOrders();
-	}
-
   render() {
   	return (
 			<Exchange {...this.props}/>
