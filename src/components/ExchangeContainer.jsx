@@ -6,7 +6,8 @@ import Exchange from './Exchange';
 
 const propTypes = {
 	bookOrders: PropTypes.object.isRequired,
-	fetchBookOrders: PropTypes.func.isRequired
+	fetchBookOrders: PropTypes.func.isRequired,
+	isFetching: PropTypes.bool.isRequired
 };
 
 class ExchangeContainer extends React.Component {
@@ -23,7 +24,8 @@ class ExchangeContainer extends React.Component {
 
 function mapStateToProps(state) {
   return {
-		bookOrders: state.orders.bookOrders || {}
+		bookOrders: state.orders.bookOrders || {},
+		isFetching: state.orders.isFetching
 	}
 }
 

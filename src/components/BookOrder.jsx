@@ -12,7 +12,6 @@ class BookOrder extends React.Component {
 		return (
 			<div className="bookOrder row">
 				<div>
-					<span className="label">Exchange</span>
 					<span className="rate">{bookOrder.Exchange}</span>
 				</div>
 				<div>
@@ -22,10 +21,6 @@ class BookOrder extends React.Component {
 				<div>
 					<span className="label">Quantity</span>
 					<span className="rate">{bookOrder.Quantity}</span>
-				</div>
-				<div>
-					<span className="label">Type</span>
-					<span className="rate">{bookOrder.Type}</span>
 				</div>
 			</div>
   	);
