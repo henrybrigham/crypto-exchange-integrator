@@ -1,4 +1,17 @@
+p {
+	margin: 0;
+}
+
+body {
+	background-color: #29313d;
+}
+
+h2 {
+	color: #CFD0D2;
+}
+
 .App {
+	background-color: #29313d;
   text-align: center;
 }
 
@@ -22,7 +35,115 @@
   font-size: large;
 }
 
+.bookOrder {
+	opacity: 1;
+	animation-name: fadeInOpacity;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+	animation-duration: 2s;
+	height: 30px;
+	width: 100%;
+	border-bottom: 1px solid silver;
+}
+
+.exchangeContainer {
+	width: 40%;
+}
+
+.label {
+	color: silver;
+	margin-right: 10px;
+}
+
+.rate {
+	color: #1aff1a;
+	margin-right: 10px;
+}
+
+.row {
+	display: flex;
+	flex-direction: row;
+}
+
+.column {
+	display: flex;
+	flex-direction: column;
+}
+
+.even {
+	justify-content: space-evenly;
+}
+
+.center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.mLA {
+	margin-left: auto;
+}
+
+.exchangeHeader {
+	padding: 10px;
+	border-bottom: 1px solid silver;
+}
+
+.sum {
+	margin-right: 5px;
+}
+
+.orderLogo {
+	height: 30px;
+	width: 30px;
+}
+
+.cell25 {
+	width: 25%;
+}
+
+.alignLeft {
+	display: flex;
+	justify-content: flex-start;
+}
+
+.alignRight {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.marketSelector {
+	width: 200px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 25px;
+}
+
+.header {
+	color: #1ad1ff;
+}
+
+.headerText {
+	font-size: 20px;
+	padding-bottom: 10px;
+	color: gold;
+}
+
+.coin {
+	padding-left: 5px;
+	color: silver;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+@keyframes fadeInOpacity {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
 }

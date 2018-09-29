@@ -5,32 +5,33 @@ import { fetchBookOrdersRequest } from '../store/bookActions';
 import Exchange from './Exchange';
 
 const propTypes = {
-	orderBooks: PropTypes.object.isRequired,
+	bookOrders: PropTypes.object.isRequired,
+	fetchBookOrders: PropTypes.func.isRequired,
+	isFetching: PropTypes.bool.isRequired,
+	error: PropTypes.bool.isRequired
 };
 
-class ExchangeContainer extends React.Component {
-	componentDidMount() {
-		this.props.fetchBookOrders();
-	}
-
-  render() {
-  	return (
-			<Exchange {...this.props}/>
-  	);
-  }
-}
+const ExchangeContainer = ({ bookOrders, fetchBookOrders, isFetching, error }) => (
+	<Exchange bookOrders={bookOrders}
+	fetchBookOrders={fetchBookOrders}
+	isFetching={isFetching}
+	error={error}
+	/>
+);
 
 function mapStateToProps(state) {
   return {
-		orderBooks: state.orders.orderBooks || {}
+		bookOrders: state.orders.bookOrders || {},
+		isFetching: state.orders.isFetching,
+		error: state.orders.error
 	}
 }
 
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchBookOrders: () => {
-			dispatch(fetchBookOrdersRequest());
+    fetchBookOrders: (market) => {
+			dispatch(fetchBookOrdersRequest(market));
 		}
   }
 }
@@ -38,3 +39,4 @@ function mapDispatchToProps(dispatch) {
 ExchangeContainer.propTypes = propTypes;
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExchangeContainer);
+export {ExchangeContainer as TestableExchangeContainer};

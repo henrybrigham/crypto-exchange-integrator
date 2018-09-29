@@ -1,26 +1,31 @@
 //////////////////
 // Dependencies //
 //////////////////
-const fs = require('fs');
-const path = require('path');
 const express = require("express");
-const helmet     = require('helmet');
 const bodyParser = require("body-parser");
+const cors       = require('cors');
 const app        = module.exports = express();
 const session    = require('client-sessions');
 const http       = require('http');
 const socket_io  = require('socket.io');
 const axios 	   = require("axios");
-const expressSession = require("express-session");
-var bittrex = require('node-bittrex-api');
-const Poloniex = require('poloniex-api-node');
+const Helpers = require('./helpers');
+const marketUrls = require('./enumerations/marketUrls');
 
 ////////////
 // Server //
 ////////////
 const server = http.createServer();
 const io = socket_io();
-const WebSocketClient = require('websocket').client;
+
+const errors = {
+	poloniexError: '',
+	bittrexError: ''
+};
+const bookOrders = {
+	poloniexOrders: {},
+	bittrexOrders: {}
+}
 
 server.listen(8000, () => {
 	console.log('listening, 8000');
@@ -48,14 +53,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-const errors = {
-	poloniexError: '',
-	bittrexError: ''
-};
-const bookOrders = {
-	poloniexOrders: {},
-	bittrexOrders: {}
-}
 		
 app.use(function(req, res, next) {
 	console.log(req.url);
@@ -65,69 +62,45 @@ app.use(function(req, res, next) {
 ////////////
 // Sockets //
 ////////////
-const poloniex = new Poloniex(); 
-poloniex.openWebSocket();
-poloniex.subscribe('BTC_ETH');
-poloniex.on('message', (channelName, data, seq) => {
-  if (channelName === 'BTC_ETH') {
-		if (data[0].type === 'orderBook') {
-			bookOrders.poloniexOrders = data[0].data
-		} 
-		else if (data[0].type === 'orderBookRemove') {
-			const rate = data[0].data.type.rate;
-			if (data[0].data.type === 'bid') {
-				delete bookOrders.poloniexOrders.bids[rate];
-			} else {
-				delete bookOrders.poloniexOrders.asks[rate];
-			}
-		} else if (data[0].type === 'orderBookModify') {
-			const type = data[0].data.type;
-			const amount = data[0].data.amount;
-			if (type === 'bid') {
-				bookOrders.poloniexOrders.bids.rate = amount;
-			} else {
-				bookOrders.poloniexOrders.asks.rate = amount;
-			}
-		}
-  }
-});
- 
-poloniex.on('close', (reason, details) => {
-  console.log(`Poloniex WebSocket connection disconnected`, reason);
-});
- 
-poloniex.on('error', (error) => {
-	console.log('error', error);
-	errors.poloniexError = error;
-});
- 
-poloniex.openWebSocket({ version: 2 });
-
 io.attach(server);
 io.on('connection', function(socket){
   socket.on('action', (action) => {
-		bittrex.websockets.client(function() {
-			bittrex.websockets.subscribe(['BTC-ETH'], function(data, err) {
-				if (data.M === 'updateExchangeState') {
-					bookOrders.bittrexOrders = data.A;
-					if (Object.keys(errors.poloniexError).length > 0 || Object.keys(errors.bittrexError).length > 0) {
-						socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_FAILURE', payload: errors });
-					} else {
-						socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_SUCCESS', payload: bookOrders });
-					}	
-				}
-				else if (err) {
-					errors.bittrexErrors = err.
-					socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_FAILURE', payload: errors });
-				}
-			});
-		});
-    if (action.type === 'orders/GET_BOOK_ORDERS_REQUEST') {
-			if (errors.length > 0) {
-				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_FAILURE', payload: errors });
-			} else {
+		const getBittrexBook = async url => {
+			try {
+				const response = await axios.get(url);
+				const formattedBittrexBookOrders = Helpers.formatBittrexOrders(response.data.result);
+				bookOrders.bittrexOrders = formattedBittrexBookOrders;
 				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_SUCCESS', payload: bookOrders });
-			}	
+				setTimeout(getBittrexBook, 2000, url);
+			} catch (error) {
+				console.log('*bittrex error', error);
+				errors.bittrexError = error;
+				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_FAILURE', payload: errors });	
+				setTimeout(getBittrexBook, 2000, url);
+			}
+		};
+
+		const getPoloniexBook = async url => {
+			try {
+				const response = await axios.get(url);
+				const formattedPoloniexBookOrders = Helpers.formatPoloniexOrders(response.data);
+				bookOrders.poloniexOrders = formattedPoloniexBookOrders;
+				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_SUCCESS', payload: bookOrders });
+				setTimeout(getPoloniexBook, 2000, url);
+			} catch (error) {
+				console.log('poloniex error', error);
+				errors.poloniexError = error;
+				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_FAILURE', payload: errors });
+				setTimeout(getPoloniexBook, 2000, url);
+			}
+		};
+
+    if (action.type === 'orders/GET_BOOK_ORDERS_REQUEST') {
+			const poloniexUrl = marketUrls.poloniex[action.market];
+			const bittrexUrl = marketUrls.bittrex[action.market];
+
+			getPoloniexBook(poloniexUrl);
+			getBittrexBook(bittrexUrl);
 		}
 	});
 });
@@ -135,15 +108,7 @@ io.on('connection', function(socket){
 ///////////////////////
 // Import/Use Routes //
 ///////////////////////
-let orders     = require('./routes/orders');
-app.use('/orders', orders);
-require('./routes/errorRoutes');
-
 app.use(function(req, res, next) {
 	res.status(404);
 	res.send("no");
 });
-
-// app.listen(8000, function() {
-// 	console.log("Server started on Port: 8000");
-// });
