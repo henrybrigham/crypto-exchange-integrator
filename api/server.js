@@ -1,10 +1,7 @@
 //////////////////
 // Dependencies //
 //////////////////
-const fs = require('fs');
-const path = require('path');
 const express = require("express");
-const helmet     = require('helmet');
 const bodyParser = require("body-parser");
 const cors       = require('cors');
 const app        = module.exports = express();
@@ -12,7 +9,6 @@ const session    = require('client-sessions');
 const http       = require('http');
 const socket_io  = require('socket.io');
 const axios 	   = require("axios");
-const expressSession = require("express-session");
 const Helpers = require('./helpers');
 const marketUrls = require('./enumerations/marketUrls');
 
@@ -21,7 +17,15 @@ const marketUrls = require('./enumerations/marketUrls');
 ////////////
 const server = http.createServer();
 const io = socket_io();
-const WebSocketClient = require('websocket').client;
+
+const errors = {
+	poloniexError: '',
+	bittrexError: ''
+};
+const bookOrders = {
+	poloniexOrders: {},
+	bittrexOrders: {}
+}
 
 server.listen(8000, () => {
 	console.log('listening, 8000');
@@ -49,14 +53,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-const errors = {
-	poloniexError: '',
-	bittrexError: ''
-};
-const bookOrders = {
-	poloniexOrders: {},
-	bittrexOrders: {}
-}
 		
 app.use(function(req, res, next) {
 	console.log(req.url);
@@ -79,7 +75,9 @@ io.on('connection', function(socket){
 			} catch (error) {
 				console.log('*bittrex error', error);
 				errors.bittrexError = error;
-				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_FAILURE', payload: errors });			}
+				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_FAILURE', payload: errors });	
+				setTimeout(getBittrexBook, 2000, url);
+			}
 		};
 
 		const getPoloniexBook = async url => {
@@ -93,6 +91,7 @@ io.on('connection', function(socket){
 				console.log('poloniex error', error);
 				errors.poloniexError = error;
 				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_FAILURE', payload: errors });
+				setTimeout(getPoloniexBook, 2000, url);
 			}
 		};
 
@@ -102,11 +101,6 @@ io.on('connection', function(socket){
 
 			getPoloniexBook(poloniexUrl);
 			getBittrexBook(bittrexUrl);
-			if (errors.length > 0) {
-				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_FAILURE', payload: errors });
-			} else {
-				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_SUCCESS', payload: bookOrders });
-			}	
 		}
 	});
 });

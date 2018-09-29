@@ -16,15 +16,16 @@ const options = [
 class MarketSelector extends React.PureComponent {
   handleChange = (selectedOption) => {
 		this.props.onSelect(selectedOption)
-  }
+	}
+	
   render() {
     const { selectedMarket } = this.props;
     return (
-      <Select
+			<Select
+				className='marketSelector'
         value={selectedMarket}
         onChange={this.handleChange}
 				options={options}
-				value={this.props.selectedMarket}
       />
     );
   }

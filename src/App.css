@@ -2,7 +2,16 @@ p {
 	margin: 0;
 }
 
+body {
+	background-color: #29313d;
+}
+
+h2 {
+	color: #CFD0D2;
+}
+
 .App {
+	background-color: #29313d;
   text-align: center;
 }
 
@@ -27,6 +36,11 @@ p {
 }
 
 .bookOrder {
+	opacity: 1;
+	animation-name: fadeInOpacity;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+	animation-duration: 2s;
 	height: 30px;
 	width: 100%;
 	border-bottom: 1px solid silver;
@@ -42,7 +56,7 @@ p {
 }
 
 .rate {
-	color: green;
+	color: #1aff1a;
 	margin-right: 10px;
 }
 
@@ -61,6 +75,7 @@ p {
 }
 
 .center {
+	display: flex;
 	justify-content: center;
 	align-items: center;
 }
@@ -97,7 +112,38 @@ p {
 	justify-content: flex-end;
 }
 
+.marketSelector {
+	width: 200px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 25px;
+}
+
+.header {
+	color: #1ad1ff;
+}
+
+.headerText {
+	font-size: 20px;
+	padding-bottom: 10px;
+	color: gold;
+}
+
+.coin {
+	padding-left: 5px;
+	color: silver;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+@keyframes fadeInOpacity {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
 }

@@ -10,6 +10,6 @@ export const fetchBookOrdersRequest = (market) => ({
 	type: GET_BOOK_ORDERS_SUCCESS, orders
  });
 
- export const fetchBookOrdersFailure = (errors) => ({
-	type: GET_BOOK_ORDERS_FAILURE, errors
+ export const fetchBookOrdersFailure = () => ({
+	type: GET_BOOK_ORDERS_FAILURE
  });

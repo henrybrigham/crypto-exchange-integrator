@@ -22,11 +22,11 @@ const actionHandlers = {
 			error: false
     }),
 
-  [GET_BOOK_ORDERS_FAILURE]: (state, action) =>
+  [GET_BOOK_ORDERS_FAILURE]: state =>
     updateObject(state, {
       bookOrders: state.bookOrders,
 			isFetching: false,
-			error: action.errors
+			error: true
     }),
 };
 

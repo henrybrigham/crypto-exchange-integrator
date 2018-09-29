@@ -1,9 +1,27 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import Adapter from 'enzyme-adapter-react-16';
+import Enzyme, { shallow } from 'enzyme';
 import App from './App';
+Enzyme.configure({ adapter: new Adapter() });
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-  ReactDOM.unmountComponentAtNode(div);
+const setup = propOverrides => {
+  const props = Object.assign({},
+    propOverrides
+  );
+
+  const wrapper = shallow(<App {...props} />);
+
+  return {
+    props,
+    wrapper,
+  };
+};
+
+describe('<App />', () => {
+	const { wrapper } = setup();
+  it('renders', () => {
+    expect(wrapper.exists()).toBe(true);
+	});
 });
+
+

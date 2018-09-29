@@ -1,8 +1,8 @@
 class Helpers {
 	static formatBittrexOrders(orders) {
 		const formattedOrders = {
-			bids: [],
-			asks: []
+			asks: [],
+			bids: []
 		};
 
 		orders.buy.forEach(order => {
@@ -20,9 +20,20 @@ class Helpers {
 
 	static formatPoloniexOrders(orders) {
 		const formattedOrders = {
-			bids: [],
-			asks: []
+			asks: [],
+			bids: []
 		};
+		console.log('orders', orders);
+
+		orders.asks.forEach(order => {
+			const formattedOrder = {
+				Exchange: 'poloniex',
+				Quantity: order[1],
+				Rate: parseFloat(order[0]),
+				Type: 'ask'
+			} 
+			formattedOrders.asks.push(formattedOrder);
+		});
 
 		orders.bids.forEach(order => {
 			const formattedOrder = {
@@ -33,15 +44,7 @@ class Helpers {
 			} 
 			formattedOrders.bids.push(formattedOrder);
 		});
-		orders.asks.forEach(order => {
-			const formattedOrder = {
-				Exchange: 'poloniex',
-				Quantity: order[1],
-				Rate: parseFloat(order[0]),
-				Type: 'ask'
-			} 
-			formattedOrders.asks.push(formattedOrder);
-		});
+		
 		return formattedOrders;
 	};
 }
