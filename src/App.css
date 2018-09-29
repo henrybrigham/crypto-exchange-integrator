@@ -27,14 +27,13 @@ p {
 }
 
 .bookOrder {
-	height: 40px;
+	height: 30px;
 	width: 100%;
 	border-bottom: 1px solid silver;
 }
 
 .exchangeContainer {
 	width: 40%;
-	border: 2px solid silver;
 }
 
 .label {
@@ -77,6 +76,25 @@ p {
 
 .sum {
 	margin-right: 5px;
+}
+
+.orderLogo {
+	height: 30px;
+	width: 30px;
+}
+
+.cell25 {
+	width: 25%;
+}
+
+.alignLeft {
+	display: flex;
+	justify-content: flex-start;
+}
+
+.alignRight {
+	display: flex;
+	justify-content: flex-end;
 }
 
 @keyframes App-logo-spin {

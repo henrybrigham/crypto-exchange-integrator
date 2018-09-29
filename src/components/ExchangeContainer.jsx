@@ -28,8 +28,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchBookOrders: () => {
-			dispatch(fetchBookOrdersRequest());
+    fetchBookOrders: (market) => {
+			dispatch(fetchBookOrdersRequest(market));
 		}
   }
 }

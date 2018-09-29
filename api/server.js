@@ -14,7 +14,7 @@ const socket_io  = require('socket.io');
 const axios 	   = require("axios");
 const expressSession = require("express-session");
 const Helpers = require('./helpers');
-
+const marketUrls = require('./enumerations/marketUrls');
 
 ////////////
 // Server //
@@ -97,9 +97,9 @@ io.on('connection', function(socket){
 		};
 
     if (action.type === 'orders/GET_BOOK_ORDERS_REQUEST') {
-			const poloniexUrl =
-		'https://poloniex.com/public?command=returnOrderBook&currencyPair=BTC_ETH&depth=100';
-		const bittrexUrl = 'https://bittrex.com/api/v1.1/public/getorderbook?market=BTC-ETH&type=both';
+			const poloniexUrl = marketUrls.poloniex[action.market];
+			const bittrexUrl = marketUrls.bittrex[action.market];
+
 			getPoloniexBook(poloniexUrl);
 			getBittrexBook(bittrexUrl);
 			if (errors.length > 0) {

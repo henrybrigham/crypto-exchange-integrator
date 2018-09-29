@@ -23,6 +23,7 @@ class Exchange extends React.Component {
 	}
 
 	componentDidMount() {
+		console.log('value', this.state.selectedMarket.value)
 		this.props.fetchBookOrders(this.state.selectedMarket.value);
 	}
 
@@ -47,7 +48,7 @@ class Exchange extends React.Component {
 		let sortedBids;
 		let sortedAsks;
 
-		if (bittrexOrders !== undefined && poloniexOrders !== undefined) {
+		if (!this.props.isFetching && (bittrexOrders !== undefined && poloniexOrders !== undefined)) {
 			const totalBids = bittrexOrders.bids.concat(poloniexOrders.bids);
 			const totalAsks = bittrexOrders.asks.concat(poloniexOrders.asks);
 			sortedBids = BookOrderHelpers.sortBookOrders(totalBids);
@@ -60,16 +61,17 @@ class Exchange extends React.Component {
 			mappedAsks = sortedAsks.map((order, i) => {
 				return <BookOrder bookOrder={order} key={i}/>
 			});
-		}
-		if (!this.props.isFetching && (bittrexOrders !== undefined && poloniexOrders !== undefined)) {
+
 			return (
 				<div className="row even">
 					<div className="exchangeContainer column">
-						<ExchangeHeader title='Bids' totalCurrency={this.calculateVolume(sortedBids)} />
+						<ExchangeHeader title='Bids' totalCurrency={this.calculateVolume(sortedBids)} 
+						market={this.state.selectedMarket.value}/>
 						{mappedBids}
 					</div>
 					<div className="exchangeContainer column">
-						<ExchangeHeader title='Asks' totalCurrency={this.calculateVolume(sortedAsks)} />			
+						<ExchangeHeader title='Asks' totalCurrency={this.calculateVolume(sortedAsks)} 
+						market={this.state.selectedMarket.value}/>			
 						{mappedAsks}
 					</div>
 				</div>
