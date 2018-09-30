@@ -5,7 +5,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors       = require('cors');
 const app        = module.exports = express();
-const session    = require('client-sessions');
 const http       = require('http');
 const socket_io  = require('socket.io');
 const axios 	   = require("axios");
@@ -27,8 +26,10 @@ const bookOrders = {
 	bittrexOrders: {}
 }
 
-server.listen(8000, () => {
-	console.log('listening, 8000');
+const PORT = process.env.PORT || 8000;
+
+server.listen(PORT, () => {
+	console.log('listening', `${PORT}`);
 });
 
 ////////////////
