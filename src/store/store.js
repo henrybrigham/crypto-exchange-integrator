@@ -3,7 +3,15 @@ import createSocketIoMiddleware from 'redux-socket.io';
 import io from 'socket.io-client';
 import CryptoApp from './rootReducer';
 
-	const socket = io('http://localhost:8000');
+let apiUrl;
+
+if(process.env.NODE_ENV === 'development') {
+	apiUrl = 'http://localhost:8000';
+} else {
+	apiUrl = 'http://198.211.114.251';
+}
+
+	const socket = io(apiUrl);
 	const socketIoMiddleware = createSocketIoMiddleware(socket, 'orders/');	
 	const middlewareEnhancer = applyMiddleware(socketIoMiddleware);
 	const storeEnhancers = [middlewareEnhancer];

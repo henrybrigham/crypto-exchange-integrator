@@ -1,0 +1,2 @@
+//Procfile
+web: nodemon ./api/server.js
