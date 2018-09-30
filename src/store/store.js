@@ -8,7 +8,7 @@ let apiUrl;
 if(process.env.NODE_ENV === 'development') {
 	apiUrl = 'http://localhost:8000';
 } else {
-	apiUrl = 'https://localhost:8000';
+	apiUrl = '/:8000';
 }
 
 	const socket = io(apiUrl);
