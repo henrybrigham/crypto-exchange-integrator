@@ -59,7 +59,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
 		"eject": "react-scripts eject",
-		"postinstall": "nodemon ./api/server.js npm run build"
+		"postinstall": "node ./api/server.js npm run build"
 	},
   "author": "Hank Brigham",
   "license": "MIT"
