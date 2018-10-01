@@ -4,7 +4,6 @@ import io from 'socket.io-client';
 import CryptoApp from './rootReducer';
 
 let apiUrl;
-console.log('**', process.env.NODE_ENV);
 if(process.env.NODE_ENV === 'development') {
 	apiUrl = 'http://localhost:8000';
 } else {
