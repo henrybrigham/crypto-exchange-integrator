@@ -65,8 +65,8 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=development node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
-		"build": "webpack --config webpack.prod.config.js",
-		"prod": "node /api/server.js && NODE_ENV=production node server.js",
+		"build": "node /api/server.js && webpack --config webpack.prod.config.js",
+		"prod": "NODE_ENV=production node server.js",
 		"postinstall": "webpack --config webpack.prod.config.js --progress --colors"
   },
   "author": "Hank Brigham",
