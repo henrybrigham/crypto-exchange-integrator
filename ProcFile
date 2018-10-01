@@ -1,2 +1,2 @@
 //Procfile
-web: nodemon ./api/server.js
+web: node server.js NODE_ENV=production
