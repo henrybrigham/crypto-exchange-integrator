@@ -8,7 +8,7 @@ console.log('**', process.env.NODE_ENV);
 if(process.env.NODE_ENV === 'development') {
 	apiUrl = 'http://localhost:8000';
 } else {
-	apiUrl = 'https://bittloniex-exchange.herokuapp.com/';
+	apiUrl = 'https://bittloniex-api.herokuapp.com:8000';
 }
 
 	const socket = io(apiUrl);
