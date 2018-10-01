@@ -11,7 +11,7 @@ if(process.env.NODE_ENV === 'development') {
 	apiUrl = 'https://bittloniex-exchange.herokuapp.com/';
 }
 
-	const socket = io('http://localhost:8000');
+	const socket = io(apiUrl);
 	const socketIoMiddleware = createSocketIoMiddleware(socket, 'orders/');	
 	const middlewareEnhancer = applyMiddleware(socketIoMiddleware);
 	const storeEnhancers = [middlewareEnhancer];
