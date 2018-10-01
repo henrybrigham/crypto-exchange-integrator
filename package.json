@@ -61,7 +61,6 @@
 		"eject": "react-scripts eject",
 		"postinstall": "npm run build node ./api/server.js"
 	},
-	"proxy": "https://localhost:8000",
   "author": "Hank Brigham",
   "license": "MIT"
 }
