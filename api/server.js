@@ -27,7 +27,7 @@ const bookOrders = {
 	bittrexOrders: {}
 }
 
-server.listen(8000, () => {
+server.listen(80, () => {
 	console.log('listening, 8000');
 });
 
