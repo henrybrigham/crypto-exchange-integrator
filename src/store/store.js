@@ -5,9 +5,9 @@ import CryptoApp from './rootReducer';
 
 let apiUrl;
 if(process.env.NODE_ENV === 'development') {
-	apiUrl = 'https://bittloniex-api.herokuapp.com';
+	apiUrl = 'http://10.0.0.241:8000';
 } else {
-	apiUrl = 'https://bittloniex-api.herokuapp.com';
+	apiUrl = 'http://10.0.0.241:8000';
 }
 console.log('api url', apiUrl);
 
