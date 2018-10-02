@@ -12,7 +12,9 @@ h2 {
 
 .App {
 	background-color: #29313d;
-  text-align: center;
+	text-align: center;
+	display: flex;
+	justify-content: center;
 }
 
 .App-logo {
@@ -132,6 +134,11 @@ h2 {
 .coin {
 	padding-left: 5px;
 	color: silver;
+}
+
+.loader {
+	margin-right: auto;
+	margin-left: auto;
 }
 
 @keyframes App-logo-spin {

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import ScrollUpButton from "react-scroll-up-button";
 import Loader from '../assets/loading.gif';
 import BookOrder from './BookOrder';
-import axios from 'axios';
 import ExchangeHeader from './ExchangeHeader';
 import MarketSelector from './MarketSelector'
+import style from '../App.css';
 
 const propTypes = {
 	bookOrders: PropTypes.object.isRequired,
@@ -34,20 +34,6 @@ class Exchange extends React.Component {
 	}
 
 	componentDidMount() {
-		function getBittrexBook(url) {
-			console.log('trying');
-
-			try {
-				const response = axios.get(url);
-				console.log('*bittrex response', response);
-
-			} catch (error) {
-				console.log('*bittrex error', error);
-				
-			}
-		};
-		getBittrexBook('https://bittrex.com/api/v1.1/public/getorderbook?market=BTC-ETH&type=both');
-
 		this.props.fetchBookOrders(this.state.selectedMarket.value);
 	}
 
@@ -112,14 +98,23 @@ class Exchange extends React.Component {
 			
 		}
 		else {
+			const divStyle = {
+				width: '100%',
+				display: 'flex',
+				justifyContent: 'center',
+				alignItems: 'center'
+			}
 			return (
-				<img alt="loader gif" src={Loader} />);
+				<div style={divStyle}>
+					<img alt="loader gif" className={style.loader} src={Loader} />
+				</div>
+			);
 		}
 	}
 
   render() {
   	return (
-			<div className="page">
+			<div className={style.center}>
 				<h2 className="pageHeader">Bittloniex Exchange</h2>
 				<MarketSelector selectedMarket={this.state.selectedMarket}
 				onSelect={this.onSelect} />

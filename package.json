@@ -57,15 +57,26 @@
     "babel-preset-stage-1": "^6.22.0",
     "babel-preset-stage-2": "^6.24.1",
     "cross-env": "^5.2.0",
-    "enzyme": "3.6.0",
+    "enzyme": "^3.6.0",
     "enzyme-adapter-react-16": "1.5.0",
+    "identity-obj-proxy": "3.0.0",
     "webpack": "^3.8.1"
   },
   "scripts": {
     "start": "cross-env NODE_ENV=development node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "build": "webpack --config webpack.prod.config.js",
     "prod": "NODE_ENV=production node server.js",
-    "postinstall": "webpack --config webpack.prod.config.js --progress --colors"
+    "postinstall": "webpack --config webpack.prod.config.js --progress --colors",
+    "test": "jest --coverage"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.(js|jsx|css)$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.(png|jpg|jpeg|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/file-transformer.js"
+		},
+		"moduleNameMapper": {
+      "\\.(css|less)$": "identity-obj-proxy"
+    }
   },
   "author": "Hank Brigham",
   "license": "MIT"

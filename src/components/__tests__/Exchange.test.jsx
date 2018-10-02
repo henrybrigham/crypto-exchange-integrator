@@ -34,9 +34,24 @@ describe('<Exchange />', () => {
 });
 
 describe('Exchange Conditional Rendering', () => {
-	const { wrapper, props } = setup({isFetching: true});
   it('renders the loading gif', () => {
+		const { wrapper, props } = setup({isFetching: true});
     expect(wrapper.find('img')).toHaveLength(1);
+	});
+
+	it('does not render the loading gif', () => {
+		const bookOrders = {
+			bittrexOrders: {
+				bids: [],
+				asks: []
+			},
+			poloniexOrders: {
+				bids: [],
+				asks: []
+			}
+		}
+		const { wrapper, props } = setup({bookOrders});
+    expect(wrapper.find('img')).toHaveLength(0);
 	});
 });
 
@@ -123,5 +138,22 @@ describe('Local Methods', () => {
 		const result = wrapper.instance().sortBookOrders(orders);
     expect(result).toEqual(expected);
 	});
+
+	describe('when props.error is true', () => {
+		const nextProps = { 
+			fetchBookOrders: jest.fn(),
+			error: true 
+		};
+		const prevState = {
+			selectedMarket: {
+				value: 'ETH/BTC',
+				label: 'ETH/BTC'
+			}
+		};
+		it('should return whatever is passed as prevState', () => {
+				const actual = Exchange.getDerivedStateFromProps(nextProps, prevState);
+				expect(nextProps.fetchBookOrders).toHaveBeenCalled();
+		});
+});
 });
 
