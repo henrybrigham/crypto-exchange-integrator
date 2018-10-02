@@ -21,7 +21,8 @@
     "babel-preset-stage-2": "^6.24.1",
     "body-parser": "1.18.3",
     "client-sessions": "0.8.0",
-    "cors": "2.8.4",
+		"cors": "2.8.4",
+		"cross-env": "^5.2.0",
     "css-loader": "^1.0.0",
     "express": "4.16.3",
     "express-session": "1.15.1",
@@ -64,7 +65,7 @@
     "webpack": "^3.8.1"
   },
   "scripts": {
-    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+    "start": "cross-env NODE_ENV=development node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "build": "webpack --config webpack.prod.config.js",
     "prod": "NODE_ENV=production node server.js",
     "postinstall": "webpack --config webpack.prod.config.js --progress --colors"
