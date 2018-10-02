@@ -23,7 +23,7 @@ class Helpers {
 			asks: [],
 			bids: []
 		};
-
+		console.log('**', orders);
 		orders.asks.forEach(order => {
 			const formattedOrder = {
 				Exchange: 'poloniex',
