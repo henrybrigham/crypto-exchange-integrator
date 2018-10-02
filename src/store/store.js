@@ -5,10 +5,11 @@ import CryptoApp from './rootReducer';
 
 let apiUrl;
 if(process.env.NODE_ENV === 'development') {
-	apiUrl = 'http://localhost:8000';
+	apiUrl = 'https://bittloniex-api.herokuapp.com';
 } else {
 	apiUrl = 'https://bittloniex-api.herokuapp.com';
 }
+console.log('api url', apiUrl);
 
 	const socket = io(apiUrl);
 	const socketIoMiddleware = createSocketIoMiddleware(socket, 'orders/');	

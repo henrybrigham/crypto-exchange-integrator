@@ -1,2 +1,2 @@
 //Procfile
-web: node server.js NODE_ENV=production
+worker: node server.js NODE_ENV=production
