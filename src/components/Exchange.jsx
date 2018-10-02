@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ScrollUpButton from "react-scroll-up-button";
 import Loader from '../assets/loading.gif';
 import BookOrder from './BookOrder';
+import axios from 'axios';
 import ExchangeHeader from './ExchangeHeader';
 import MarketSelector from './MarketSelector'
 
@@ -33,6 +34,18 @@ class Exchange extends React.Component {
 	}
 
 	componentDidMount() {
+		function getBittrexBook(url) {
+			try {
+				const response = axios.get(url);
+				console.log('*bittrex response', response);
+
+			} catch (error) {
+				console.log('*bittrex error', error);
+				
+			}
+		};
+		getBittrexBook('https://bittrex.com/api/v1.1/public/getorderbook?market=BTC-ETH&type=both');
+
 		this.props.fetchBookOrders(this.state.selectedMarket.value);
 	}
 
