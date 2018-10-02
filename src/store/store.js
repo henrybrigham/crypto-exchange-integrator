@@ -5,11 +5,10 @@ import CryptoApp from './rootReducer';
 
 let apiUrl;
 if(process.env.NODE_ENV === 'development') {
-	apiUrl = 'http://208.68.36.85:80';
+	apiUrl = 'http://localhost:8000';
 } else {
 	apiUrl = 'http://208.68.36.85:80';
 }
-console.log('api url', apiUrl);
 
 	const socket = io(apiUrl);
 	const socketIoMiddleware = createSocketIoMiddleware(socket, 'orders/');	
