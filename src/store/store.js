@@ -5,7 +5,7 @@ import CryptoApp from './rootReducer';
 
 let apiUrl;
 if(process.env.NODE_ENV === 'development') {
-	apiUrl = 'http://localhost:8000';
+	apiUrl = 'http://208.68.36.85:80';
 } else {
 	apiUrl = 'http://208.68.36.85';
 }
