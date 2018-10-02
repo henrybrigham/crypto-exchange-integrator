@@ -4,10 +4,6 @@
   "version": "0.1.0",
   "description": "An application for integrating multiple crypto currency exchanges into one.",
   "main": "",
-  "engines": {
-    "node": "10.10.0",
-    "npm": "6.4.1"
-  },
   "dependencies": {
     "axios": "0.18.0",
     "babel": "6.23.0",
@@ -30,7 +26,7 @@
     "formidable": "1.1.1",
     "helmet": "3.13.0",
     "jest": "23.6.0",
-    "node": "10.10.0",
+    "node": "8.10.0",
     "prop-types": "15.6.1",
     "react": "16.5.2",
     "react-dom": "16.5.2",
