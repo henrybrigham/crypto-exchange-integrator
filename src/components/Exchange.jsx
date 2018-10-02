@@ -5,6 +5,7 @@ import Loader from '../assets/loading.gif';
 import BookOrder from './BookOrder';
 import ExchangeHeader from './ExchangeHeader';
 import MarketSelector from './MarketSelector'
+import style from '../App.css';
 
 const propTypes = {
 	bookOrders: PropTypes.object.isRequired,
@@ -97,14 +98,23 @@ class Exchange extends React.Component {
 			
 		}
 		else {
+			const divStyle = {
+				width: '100%',
+				display: 'flex',
+				justifyContent: 'center',
+				alignItems: 'center'
+			}
 			return (
-				<img alt="loader gif" src={Loader} />);
+				<div style={divStyle}>
+					<img alt="loader gif" className={style.loader} src={Loader} />
+				</div>
+			);
 		}
 	}
 
   render() {
   	return (
-			<div className="page">
+			<div className={style.center}>
 				<h2 className="pageHeader">Bittloniex Exchange</h2>
 				<MarketSelector selectedMarket={this.state.selectedMarket}
 				onSelect={this.onSelect} />

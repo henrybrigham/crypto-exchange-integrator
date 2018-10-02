@@ -1,9 +1,9 @@
 import React from 'react';
 import ExchangeContainer from './components/ExchangeContainer';
-import './App.css';
+import style from './App.css';
 
 const App = () => (
-	<div className="App">
+	<div className={style.App}>
 		<ExchangeContainer />
 	</div>
 );
