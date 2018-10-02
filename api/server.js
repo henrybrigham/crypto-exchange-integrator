@@ -86,7 +86,6 @@ io.on('connection', function(socket){
 				const formattedPoloniexBookOrders = Helpers.formatPoloniexOrders(response.data);
 				bookOrders.poloniexOrders = formattedPoloniexBookOrders;
 				socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_SUCCESS', payload: bookOrders });
-				setTimeout(getPoloniexBook, 2000, url);
 			} catch (error) {
 				console.log('poloniex error', error);
 				errors.poloniexError = error;
@@ -99,8 +98,8 @@ io.on('connection', function(socket){
 			const poloniexUrl = marketUrls.poloniex[action.market];
 			const bittrexUrl = marketUrls.bittrex[action.market];
 
-			getPoloniexBook(poloniexUrl);
-			getBittrexBook(bittrexUrl);
+			setTimeout(getPoloniexBook, 3000, poloniexUrl);
+			setTimeout(getBittrexBook, 3000, bittrexUrl);
 		}
 	});
 });
