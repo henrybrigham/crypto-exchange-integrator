@@ -35,6 +35,8 @@ class Exchange extends React.Component {
 
 	componentDidMount() {
 		function getBittrexBook(url) {
+			console.log('trying');
+
 			try {
 				const response = axios.get(url);
 				console.log('*bittrex response', response);
