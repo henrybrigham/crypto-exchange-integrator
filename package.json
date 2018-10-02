@@ -73,8 +73,8 @@
     "transform": {
       "^.+\\.(js|jsx|css)$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.(png|jpg|jpeg|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/file-transformer.js"
-		},
-		"moduleNameMapper": {
+    },
+    "moduleNameMapper": {
       "\\.(css|less)$": "identity-obj-proxy"
     }
   },
