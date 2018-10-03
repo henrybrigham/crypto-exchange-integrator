@@ -79,14 +79,13 @@ io.on('connection', function(socket){
 				bookOrders.bittrexOrders = formattedBittrexBookOrders;
 				if(requestNumber === number) {
 					socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_SUCCESS', payload: bookOrders });
-					setTimeout(getBittrexBook, 2000, url, number);
+					setTimeout(getBittrexBook, 4000, url, number);
 				}
 			} catch (error) {
 				console.log('*bittrex error', error);
 				errors.bittrexError = error;
 				if(requestNumber === number) {
 					socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_FAILURE', payload: errors });	
-					setTimeout(getBittrexBook, 2000, url, number);
 				}
 			}
 		};
@@ -98,14 +97,13 @@ io.on('connection', function(socket){
 				bookOrders.poloniexOrders = formattedPoloniexBookOrders;
 				if(requestNumber === number) {
 					socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_SUCCESS', payload: bookOrders });
-					setTimeout(getPoloniexBook, 2000, url, number);
+					setTimeout(getPoloniexBook, 4000, url, number);
 				}
 			} catch (error) {
 				console.log('poloniex error', error);
 				errors.poloniexError = error;
 				if(requestNumber === number) {
 					socket.emit('action', { type: 'orders/GET_BOOK_ORDERS_FAILURE', payload: errors });
-					setTimeout(getPoloniexBook, 2000, url, number);
 				}
 			}
 		};
