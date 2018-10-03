@@ -21,10 +21,10 @@ const BookOrder = ({bookOrder}) => {
 				alt="exchange logo"
 				src={logoSource} />
 			</div>
-			<div className="cell25 center">
+			<div className="cell25 center alignLeft">
 				<span className="rate">{bookOrder.Rate}</span>
 			</div>
-			<div className="cell25 center">
+			<div className="cell25 center alignLeft">
 				<span className="rate">{bookOrder.Quantity}</span>
 			</div>
 		</div>
