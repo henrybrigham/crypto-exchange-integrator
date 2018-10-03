@@ -120,7 +120,6 @@ io.on('connection', function(socket){
 		}
 	});
 	socket.on('disconnect', function () {
-		socket.disconnect(0);
 		requestNumber += 1;
 		console.log('close'); 
 	 });
