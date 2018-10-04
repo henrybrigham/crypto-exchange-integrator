@@ -29,12 +29,7 @@ const bookOrders = {
 
 let requestNumber = 0;
 
-let PORT = 8000;
-if (process.env.NODE_ENV === 'production') {
-	PORT = 80;
-}
-
-server.listen(PORT, () => {
+server.listen(8000, () => {
 	console.log('listening, 8000');
 });
 
