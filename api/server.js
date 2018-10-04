@@ -33,34 +33,6 @@ server.listen(8000, () => {
 	console.log('listening, 8000');
 });
 
-////////////////
-// Misc Setup //
-////////////////
-app.locals.basedir = __dirname;
-let gar = global.appRoot = app.locals.basedir;
-
-try {
-  app.secret = require(`${gar}/secrets`);
-} catch (err) {
-  app.secret = {
-    appSecret: '4b7b78a47825bfbd0d58a7851f73450197b779fd446cef73196a7063c9e4a150'
-  };
-}
-
-////////////////
-// Middleware //
-////////////////
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-		
-app.use(function(req, res, next) {
-	console.log(req.url);
-	next();
-});
-
 ////////////
 // Sockets //
 ////////////
@@ -112,6 +84,7 @@ io.on('connection', function(socket){
 			getBittrexBook(bittrexUrl, requestNumber);
 		}
 	});
+	
 	socket.on('disconnect', function () {
 		requestNumber += 1;
 		console.log('close'); 
