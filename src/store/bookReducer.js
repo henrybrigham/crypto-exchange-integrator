@@ -2,6 +2,7 @@ import { updateObject, createReducer } from './utilities';
 import { 
 	GET_BOOK_ORDERS_REQUEST, GET_BOOK_ORDERS_SUCCESS, GET_BOOK_ORDERS_FAILURE 
 } from './bookActions';
+
 const initialState = {
 	bookOrders: {},
 	isFetching: false,

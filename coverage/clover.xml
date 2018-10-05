@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1538460773787" clover="3.2.0">
-  <project timestamp="1538460773787" name="All files">
-    <metrics statements="91" coveredstatements="77" conditionals="15" coveredconditionals="12" methods="30" coveredmethods="22" elements="136" coveredelements="111" complexity="0" loc="91" ncloc="91" packages="5" files="11" classes="11">
+<coverage generated="1538702863169" clover="3.2.0">
+  <project timestamp="1538702863169" name="All files">
+    <metrics statements="90" coveredstatements="77" conditionals="15" coveredconditionals="12" methods="30" coveredmethods="22" elements="135" coveredelements="111" complexity="0" loc="90" ncloc="90" packages="5" files="11" classes="11">
       <package name="api">
-        <metrics statements="20" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="3"/>
+        <metrics statements="19" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="3"/>
         <file name="helpers.js" path="/Users/humanbassvirus/Desktop/Coding/Challenges/crypto-exchange-integrator/api/helpers.js">
-          <metrics statements="20" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="3"/>
+          <metrics statements="19" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="3"/>
           <line num="3" count="1" type="stmt"/>
           <line num="8" count="1" type="stmt"/>
           <line num="9" count="2" type="stmt"/>
@@ -17,7 +17,6 @@
           <line num="16" count="2" type="stmt"/>
           <line num="18" count="1" type="stmt"/>
           <line num="22" count="0" type="stmt"/>
-          <line num="26" count="0" type="stmt"/>
           <line num="27" count="0" type="stmt"/>
           <line num="28" count="0" type="stmt"/>
           <line num="34" count="0" type="stmt"/>
@@ -94,7 +93,7 @@
           <line num="79" count="1" type="stmt"/>
           <line num="80" count="0" type="stmt"/>
           <line num="83" count="1" type="stmt"/>
-          <line num="101" count="4" type="stmt"/>
+          <line num="100" count="4" type="stmt"/>
           <line num="107" count="4" type="stmt"/>
           <line num="116" count="5" type="stmt"/>
           <line num="128" count="3" type="stmt"/>
@@ -115,9 +114,9 @@
           <line num="9" count="4" type="stmt"/>
           <line num="13" count="4" type="stmt"/>
           <line num="14" count="3" type="stmt"/>
-          <line num="15" count="3" type="stmt"/>
-          <line num="33" count="4" type="stmt"/>
+          <line num="16" count="3" type="stmt"/>
           <line num="34" count="4" type="stmt"/>
+          <line num="35" count="4" type="stmt"/>
         </file>
         <file name="MarketSelector.jsx" path="/Users/humanbassvirus/Desktop/Coding/Challenges/crypto-exchange-integrator/src/components/MarketSelector.jsx">
           <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>

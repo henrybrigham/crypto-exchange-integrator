@@ -16,6 +16,11 @@ For production:
 2. npm run build
 3. npm run prod
 4. in /api
-	a. run node server.js
+	a. run NODE_ENV=production node server.js
 
 More config is necessary to complete this step as it is setup to run on DigitalOcean via IP address http://208.68.36.85/
+
+
+##TESTING##
+npm i
+npm run test

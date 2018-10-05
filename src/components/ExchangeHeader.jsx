@@ -12,6 +12,7 @@ const defaultProps = {
 
 const ExchangeHeader = ({title, totalCurrency, market}) => {
 	const coinArray = market.split('/');
+	
 	return (
 		<div className="column exchangeHeader">
 			<div className="row headerText">

@@ -41,7 +41,7 @@ class Exchange extends React.Component {
 		let coinSum = 0;
 		orders.forEach(order => {
 			coinSum += order.Quantity;
-		})
+		});
 		return coinSum;
 	}
 
@@ -95,7 +95,6 @@ class Exchange extends React.Component {
 					</div>
 				);
 			}
-			
 		}
 		else {
 			const divStyle = {
@@ -104,6 +103,7 @@ class Exchange extends React.Component {
 				justifyContent: 'center',
 				alignItems: 'center'
 			}
+			
 			return (
 				<div style={divStyle}>
 					<img alt="loader gif" className={style.loader} src={Loader} />
