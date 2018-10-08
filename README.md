@@ -23,5 +23,5 @@ More config is necessary to complete this step as it is setup to run on DigitalO
 
 
 ##TESTING##
-npm i
-npm run test
+1. npm i
+2. npm run test
