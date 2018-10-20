@@ -4,41 +4,62 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors       = require('cors');
-const app        = module.exports = express();
-const session    = require('client-sessions');
 const http       = require('http');
 const socket_io  = require('socket.io');
 const axios 	   = require("axios");
 const Helpers = require('./helpers');
 const marketUrls = require('./enumerations/marketUrls');
+let app = express();
+let session = require('express-session')({
+  secret: 'my-secret',
+  resave: true,
+  saveUninitialized: true
+});
 
 ////////////
 // Server //
 ////////////
-const server = http.createServer();
-const io = socket_io();
+const server = http.createServer(app);
+const io = socket_io(server);
 
-const errors = {
-	poloniexError: '',
-	bittrexError: ''
-};
-const bookOrders = {
-	poloniexOrders: {},
-	bittrexOrders: {}
-}
+/////////////
+// Session //
+/////////////
+// Use express-session middleware for express
+app.use(session);
 
-let requestNumber = 0;
-
-server.listen(8000, () => {
-	console.log('listening, 8000');
+app.use(function(req, res, next) {
+  console.log(req.METHOD, req.url);
+  next();
 });
+
+const sharedsession = require('express-socket.io-session');
+
+// Use shared session middleware for socket.io
+io.use(sharedsession(session, {
+  autoSave:true
+}));
 
 ////////////
 // Sockets //
 ////////////
 io.attach(server);
 io.on('connection', function(socket){
+	let requestNumber = 0;
+
+	let errors = {
+		poloniexError: '',
+		bittrexError: ''
+	};
+	let bookOrders = {
+		poloniexOrders: {},
+		bittrexOrders: {}
+	}
+
   socket.on('action', (action) => {
+		socket.handshake.session.market = action.market;
+		socket.handshake.session.save();
+
 		const getBittrexBook = async (url, number) => {
 			try {
 				const response = await axios.get(url);
@@ -79,7 +100,7 @@ io.on('connection', function(socket){
 			const poloniexUrl = marketUrls.poloniex[action.market];
 			const bittrexUrl = marketUrls.bittrex[action.market];
 			requestNumber += 1;
-
+			console.log('req #', requestNumber);
 			getPoloniexBook(poloniexUrl, requestNumber);
 			getBittrexBook(bittrexUrl, requestNumber);
 		}
@@ -87,6 +108,8 @@ io.on('connection', function(socket){
 	
 	socket.on('disconnect', function () {
 		requestNumber += 1;
+		delete socket.handshake.session.market;
+    socket.handshake.session.save();
 		console.log('close'); 
 	 });
 });
@@ -97,4 +120,8 @@ io.on('connection', function(socket){
 app.use(function(req, res, next) {
 	res.status(404);
 	res.send("no");
+});
+
+server.listen(8000, () => {
+	console.log('listening, 8000');
 });
